@@ -101,6 +101,15 @@ namespace InfiniteChests
 				{
 					switch (e.MsgID)
 					{
+                        case PacketTypes.ChestName:
+                            {
+                                int id = reader.ReadInt16();
+                                //TSPlayer.All.SendInfoMessage("id: " + id);
+                                int x = reader.ReadInt16();
+                                int y = reader.ReadInt16();
+                                Task.Factory.StartNew(() => GetNewChest(x, y, plr)).LogExceptions();
+                            }
+                            break;
 						case PacketTypes.ChestGetContents:
 							{
 								if (Infos[plr].TransactionsLeft > 0)
@@ -148,16 +157,19 @@ namespace InfiniteChests
                                         Infos[plr].Y = -1;
                                     }
                                 }
-                                else if (Infos[plr].TransactionsLeft > 0)
-                                {
-                                    //the user is still transfering items, they shouldnt be allowed to open another chest until that finishes.
-                                    return;
-                                }
 
-                                int length = reader.ReadByte();
+                                //Will work on in the future
 
-                                if (length != 0 && length <= 20 && length != 255)
-                                    TShock.Players[plr].SendData(PacketTypes.ChestName, "", 0, x, y);
+                                //int length = reader.ReadByte();
+
+                                //if (length > 0 && length <= 20)
+                                //{
+                                //    string name = reader.ReadString();
+                                //    if (TShock.Players[plr].Group.HasPermission("infchests.chest.name"))
+                                //        //Task.Factory.StartNew(() => ModChestName(plr, name)).LogExceptions();
+                                //}
+
+                                e.Handled = true;
                             }
 						    break;
 						case PacketTypes.TileKill:
@@ -307,7 +319,8 @@ namespace InfiniteChests
 				new SqlColumn("BankID", MySqlDbType.Int32),
 				new SqlColumn("RefillTime", MySqlDbType.Int32),
 				new SqlColumn("Password", MySqlDbType.Text),
-				new SqlColumn("WorldID", MySqlDbType.Int32)));
+				new SqlColumn("WorldID", MySqlDbType.Int32),
+                new SqlColumn("Name", MySqlDbType.Text)));
 
 			sqlcreator.EnsureTableStructure(new SqlTable("BankChests",
 				new SqlColumn("ID", MySqlDbType.Int32) { AutoIncrement = true, Primary = true },
@@ -344,6 +357,18 @@ namespace InfiniteChests
 				WorldFile.saveWorld();
 			}
 		}
+
+        void GetNewChest(int x, int y, int plr)
+        {
+            using (QueryResult reader = Database.QueryReader("SELECT Name FROM Chests WHERE X = @0 AND Y = @1 AND WorldID = @2",
+                x, y, Main.worldID))
+            {
+                if (reader.Read())
+                {
+                    TShock.Players[plr].SendData(PacketTypes.ChestName, reader.Get<string>("Name"), 0, x, y);
+                }
+            }
+        }
 
 		void GetChest(int x, int y, int plr)
 		{
