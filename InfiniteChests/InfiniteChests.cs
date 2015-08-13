@@ -544,7 +544,13 @@ namespace InfiniteChests
 						break;
 					default:
 
-						bool isFree = String.IsNullOrEmpty(chest.Account);
+                        if (Infos.Any(p => p.X == x && p.Y == y && p.Index != Infos[plr].Index))
+                        {
+                            player.SendErrorMessage("This chest is already in use.");
+                            return;
+                        }
+
+                        bool isFree = String.IsNullOrEmpty(chest.Account);
 						bool isOwner = chest.Account == player.User.Name || player.Group.HasPermission("infchests.admin.editall");
 						bool isRegion = chest.IsRegion && TShock.Regions.CanBuild(x, y, player);
 						if (!isFree && !isOwner && !chest.IsPublic && !isRegion)
