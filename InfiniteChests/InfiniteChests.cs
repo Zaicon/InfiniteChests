@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Credit to MarioE for the original plugin.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -20,7 +24,7 @@ using TShockAPI.DB;
 
 namespace InfiniteChests
 {
-	[ApiVersion(1, 21)]
+	[ApiVersion(1, 22)]
 	public class InfiniteChests : TerrariaPlugin
 	{
 		private IDbConnection Database;
@@ -30,7 +34,7 @@ namespace InfiniteChests
 
 		public override string Author
 		{
-			get { return "MarioE"; }
+			get { return "Maintained by Zaicon"; }
 		}
 		public override string Description
 		{
@@ -144,6 +148,17 @@ namespace InfiniteChests
                                 int x = reader.ReadInt16();
                                 int y = reader.ReadInt16();
 
+                                //Will work on in the future
+
+                                int length = reader.ReadByte();
+
+                                if (length > 0 && length <= 20)
+                                {
+                                    string name = reader.ReadString();
+                                    if (TShock.Players[plr].Group.HasPermission("infchests.chest.name"))
+                                        Task.Factory.StartNew(() => ModChestName(plr, name)).LogExceptions();
+                                }
+
                                 if (action == -1)
                                 {
                                     if (Infos[plr].TransactionsLeft > 0)
@@ -158,16 +173,7 @@ namespace InfiniteChests
                                     }
                                 }
 
-                                //Will work on in the future
-
-                                //int length = reader.ReadByte();
-
-                                //if (length > 0 && length <= 20)
-                                //{
-                                //    string name = reader.ReadString();
-                                //    if (TShock.Players[plr].Group.HasPermission("infchests.chest.name"))
-                                //        //Task.Factory.StartNew(() => ModChestName(plr, name)).LogExceptions();
-                                //}
+                                
 
                                 e.Handled = true;
                             }
@@ -605,8 +611,8 @@ namespace InfiniteChests
 						player.SendRawData(raw2);
 						player.SendData(PacketTypes.ChestName, "", 0, x, y);
 
-						info.X = x;
-						info.Y = y;
+						Infos[plr].X = x;
+						Infos[plr].Y = y;
 						break;
 				}
 				info.Action = ChestAction.None;
@@ -661,6 +667,12 @@ namespace InfiniteChests
 				TSPlayer.All.SendData(PacketTypes.Tile, "", 0, x, y + 1);
 			}
 		}
+        void ModChestName(int plr, string name)
+        {
+            string query = $"UPDATE Chests SET Name = '{name}' WHERE X = {Infos[plr].X} AND Y = {Infos[plr].Y};";
+            Database.Query(query);
+            NetMessage.SendData((int)PacketTypes.ChestName, -1, -1, "name", 0, Infos[plr].X, Infos[plr].Y);
+        }
 		void ModChest(int plr, byte slot, int ID, int stack, byte prefix)
 		{
 			lock (Database)
