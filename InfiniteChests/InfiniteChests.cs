@@ -2,6 +2,8 @@
  * Credit to MarioE for the original plugin.
  */
 
+using Mono.Data.Sqlite;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,8 +15,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using Mono.Data.Sqlite;
-using MySql.Data.MySqlClient;
 using Terraria;
 using Terraria.ID;
 using Terraria.IO;
@@ -24,7 +24,7 @@ using TShockAPI.DB;
 
 namespace InfiniteChests
 {
-	[ApiVersion(1, 22)]
+    [ApiVersion(1, 23)]
 	public class InfiniteChests : TerrariaPlugin
 	{
 		private IDbConnection Database;
@@ -417,7 +417,7 @@ namespace InfiniteChests
 							chest.RefillTime == 1 ? "" : "s", chest.Flags.HasFlag(ChestFlags.Region));
 						break;
 					case ChestAction.Protect:
-						if (!String.IsNullOrEmpty(chest.Account))
+						if (!string.IsNullOrEmpty(chest.Account))
 						{
 							player.SendErrorMessage("This chest is already protected.");
 							break;
@@ -426,7 +426,7 @@ namespace InfiniteChests
 						player.SendSuccessMessage("This chest is now protected.");
 						break;
 					case ChestAction.TogglePublic:
-						if (String.IsNullOrEmpty(chest.Account))
+						if (string.IsNullOrEmpty(chest.Account))
 						{
 							player.SendErrorMessage("This chest is not protected.");
 							break;
@@ -440,7 +440,7 @@ namespace InfiniteChests
 						player.SendSuccessMessage("This chest is now p{0}.", chest.IsPublic ? "rivate" : "ublic");
 						break;
 					case ChestAction.ToggleRegion:
-						if (String.IsNullOrEmpty(chest.Account))
+						if (string.IsNullOrEmpty(chest.Account))
 						{
 							player.SendErrorMessage("This chest is not protected.");
 							break;
@@ -454,7 +454,7 @@ namespace InfiniteChests
 						player.SendSuccessMessage("This chest is no{0} region shared.", chest.IsRegion ? " longer" : "w");
 						break;
 					case ChestAction.SetBank:
-						if (String.IsNullOrEmpty(chest.Account))
+						if (string.IsNullOrEmpty(chest.Account))
 						{
 							player.SendErrorMessage("This chest is not protected.");
 							break;
@@ -491,7 +491,7 @@ namespace InfiniteChests
 						}
 						break;
 					case ChestAction.SetPassword:
-						if (String.IsNullOrEmpty(chest.Account))
+						if (string.IsNullOrEmpty(chest.Account))
 						{
 							player.SendErrorMessage("This chest is not protected.");
 							break;
@@ -501,7 +501,7 @@ namespace InfiniteChests
 							player.SendErrorMessage("This chest is not yours.");
 							break;
 						}
-						if (String.Equals(info.Password, "remove", StringComparison.CurrentCultureIgnoreCase))
+						if (string.Equals(info.Password, "remove", StringComparison.CurrentCultureIgnoreCase))
 						{
 							Database.Query("UPDATE Chests SET Password = '' WHERE ID = @0", chest.ID);
 							player.SendSuccessMessage("This chest is no longer password protected.", info.Password);
@@ -513,7 +513,7 @@ namespace InfiniteChests
 						}
 						break;
 					case ChestAction.SetRefill:
-						if (String.IsNullOrEmpty(chest.Account))
+						if (string.IsNullOrEmpty(chest.Account))
 						{
 							player.SendErrorMessage("This chest is not protected.");
 							break;
@@ -535,7 +535,7 @@ namespace InfiniteChests
 						}
 						break;
 					case ChestAction.Unprotect:
-						if (String.IsNullOrEmpty(chest.Account))
+						if (string.IsNullOrEmpty(chest.Account))
 						{
 							player.SendErrorMessage("This chest is not protected.");
 							break;
@@ -556,12 +556,12 @@ namespace InfiniteChests
                             return;
                         }
 
-                        bool isFree = String.IsNullOrEmpty(chest.Account);
+                        bool isFree = string.IsNullOrEmpty(chest.Account);
 						bool isOwner = chest.Account == player.User.Name || player.Group.HasPermission("infchests.admin.editall");
 						bool isRegion = chest.IsRegion && TShock.Regions.CanBuild(x, y, player);
 						if (!isFree && !isOwner && !chest.IsPublic && !isRegion)
 						{
-							if (String.IsNullOrEmpty(chest.HashedPassword))
+							if (string.IsNullOrEmpty(chest.HashedPassword))
 							{
 								player.SendErrorMessage("This chest is protected.");
 								break;
@@ -792,7 +792,7 @@ namespace InfiniteChests
 			int bankID;
 			if (!int.TryParse(e.Parameters[0], out bankID) || bankID <= 0)
 			{
-				if (String.Equals(e.Parameters[0], "remove", StringComparison.CurrentCultureIgnoreCase))
+				if (string.Equals(e.Parameters[0], "remove", StringComparison.CurrentCultureIgnoreCase))
 				{
 					Infos[e.Player.Index].Action = ChestAction.SetBank;
 					Infos[e.Player.Index].BankID = -1;

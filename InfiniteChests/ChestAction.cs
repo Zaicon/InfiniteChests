@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace InfiniteChests
+﻿namespace InfiniteChests
 {
-	public enum ChestAction : byte
+    public enum ChestAction : byte
 	{
 		None,
 		GetInfo,
