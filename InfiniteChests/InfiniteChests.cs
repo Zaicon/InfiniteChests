@@ -557,7 +557,7 @@ namespace InfiniteChests
                         }
 
                         bool isFree = string.IsNullOrEmpty(chest.Account);
-						bool isOwner = chest.Account == player.User.Name || player.Group.HasPermission("infchests.admin.editall");
+						bool isOwner = chest.Account == player.User?.Name || player.Group.HasPermission("infchests.admin.editall");
 						bool isRegion = chest.IsRegion && TShock.Regions.CanBuild(x, y, player);
 						if (!isFree && !isOwner && !chest.IsPublic && !isRegion)
 						{
@@ -644,7 +644,7 @@ namespace InfiniteChests
 				WorldGen.KillTile(x, y);
 				TSPlayer.All.SendData(PacketTypes.Tile, "", 0, x, y + 1);
 			}
-			else if (chest.Account != player.User.Name && !String.IsNullOrEmpty(chest.Account) && !player.Group.HasPermission("infchests.admin.editall"))
+			else if (chest.Account != player.User?.Name && !String.IsNullOrEmpty(chest.Account) && !player.Group.HasPermission("infchests.admin.editall"))
 			{
 				player.SendErrorMessage("This chest is protected.");
 				player.SendTileSquare(x, y, 3);
@@ -671,7 +671,7 @@ namespace InfiniteChests
         {
             string query = $"UPDATE Chests SET Name = '{name}' WHERE X = {Infos[plr].X} AND Y = {Infos[plr].Y};";
             Database.Query(query);
-            NetMessage.SendData((int)PacketTypes.ChestName, -1, -1, "name", 0, Infos[plr].X, Infos[plr].Y);
+            NetMessage.SendData((int)PacketTypes.ChestName, plr, -1, name, 255, Infos[plr].X, Infos[plr].Y);
         }
 		void ModChest(int plr, byte slot, int ID, int stack, byte prefix)
 		{
