@@ -150,14 +150,14 @@ namespace InfiniteChests
 
                                 //Will work on in the future
 
-                                int length = reader.ReadByte();
+                                //int length = reader.ReadByte();
 
-                                if (length > 0 && length <= 20)
-                                {
-                                    string name = reader.ReadString();
-                                    if (TShock.Players[plr].Group.HasPermission("infchests.chest.name"))
-                                        Task.Factory.StartNew(() => ModChestName(plr, name)).LogExceptions();
-                                }
+                                //if (length > 0 && length <= 20)
+                                //{
+                                //    string name = reader.ReadString();
+                                //    if (TShock.Players[plr].Group.HasPermission("infchests.chest.name"))
+                                //        Task.Factory.StartNew(() => ModChestName(plr, name)).LogExceptions();
+                                //}
 
                                 if (action == -1)
                                 {
