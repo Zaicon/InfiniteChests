@@ -2,6 +2,7 @@
  * Credit to MarioE for the original plugin.
  */
 
+using Microsoft.Xna.Framework;
 using Mono.Data.Sqlite;
 using MySql.Data.MySqlClient;
 using System;
@@ -24,7 +25,7 @@ using TShockAPI.DB;
 
 namespace InfiniteChests
 {
-    [ApiVersion(1, 23)]
+    [ApiVersion(2,0)]
 	public class InfiniteChests : TerrariaPlugin
 	{
 		private IDbConnection Database;

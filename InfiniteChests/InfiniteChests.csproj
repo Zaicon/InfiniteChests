@@ -47,21 +47,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BCrypt.Net">
-      <HintPath>..\..\..\..\Desktop\TShock 4.3.17\ServerPlugins\BCrypt.Net.dll</HintPath>
+      <HintPath>References\BCrypt.Net.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Data.Sqlite">
-      <HintPath>..\..\..\..\Desktop\TShock 4.3.17\ServerPlugins\Mono.Data.Sqlite.dll</HintPath>
+      <HintPath>References\Mono.Data.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data">
-      <HintPath>..\..\..\..\Desktop\TShock 4.3.17\ServerPlugins\MySql.Data.dll</HintPath>
+      <HintPath>References\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="OTAPI">
+      <HintPath>References\OTAPI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="TerrariaServer">
-      <HintPath>..\..\..\..\Desktop\TShock 4.3.17\TerrariaServer.exe</HintPath>
+      <HintPath>References\TerrariaServer.exe</HintPath>
     </Reference>
     <Reference Include="TShockAPI">
-      <HintPath>..\..\..\..\Desktop\TShock 4.3.17\ServerPlugins\TShockAPI.dll</HintPath>
+      <HintPath>References\TShockAPI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
