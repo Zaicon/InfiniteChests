@@ -19,13 +19,14 @@ using System.Timers;
 using Terraria;
 using Terraria.ID;
 using Terraria.IO;
+using Terraria.Localization;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
 
 namespace InfiniteChests
 {
-    [ApiVersion(2,0)]
+    [ApiVersion(2,1)]
 	public class InfiniteChests : TerrariaPlugin
 	{
 		private IDbConnection Database;
@@ -203,14 +204,14 @@ namespace InfiniteChests
                                         if (action == 0)
                                         {
                                             WorldGen.PlaceChest(x, y, 21, false, style);
-                                            NetMessage.SendData((int)PacketTypes.TileKill, -1, plr, "", 0, x, y, style, 1);
-                                            NetMessage.SendData((int)PacketTypes.TileKill, plr, -1, "", 0, x, y, style, 0);
+                                            NetMessage.SendData((int)PacketTypes.TileKill, -1, plr, NetworkText.Empty, 0, x, y, style, 1);
+                                            NetMessage.SendData((int)PacketTypes.TileKill, plr, -1, NetworkText.Empty, 0, x, y, style, 0);
                                         }
                                         else
                                         {
                                             WorldGen.PlaceChest(x, y, 88, false, style);
-                                            NetMessage.SendData((int)PacketTypes.TileKill, -1, plr, "", 2, x, y, style, 1);
-                                            NetMessage.SendData((int)PacketTypes.TileKill, plr, -1, "", 2, x, y, style, 0);
+                                            NetMessage.SendData((int)PacketTypes.TileKill, -1, plr, NetworkText.Empty, 2, x, y, style, 1);
+                                            NetMessage.SendData((int)PacketTypes.TileKill, plr, -1, NetworkText.Empty, 2, x, y, style, 0);
                                         }
 
                                             e.Handled = true;
@@ -668,12 +669,12 @@ namespace InfiniteChests
 				TSPlayer.All.SendData(PacketTypes.Tile, "", 0, x, y + 1);
 			}
 		}
-        void ModChestName(int plr, string name)
-        {
-            string query = $"UPDATE Chests SET Name = '{name}' WHERE X = {Infos[plr].X} AND Y = {Infos[plr].Y};";
-            Database.Query(query);
-            NetMessage.SendData((int)PacketTypes.ChestName, plr, -1, name, 255, Infos[plr].X, Infos[plr].Y);
-        }
+		void ModChestName(int plr, string name)
+		{
+			string query = $"UPDATE Chests SET Name = '{name}' WHERE X = {Infos[plr].X} AND Y = {Infos[plr].Y};";
+			Database.Query(query);
+			NetMessage.SendData((int)PacketTypes.ChestName, plr, -1, new NetworkText(name, NetworkText.Mode.Literal), 255, Infos[plr].X, Infos[plr].Y);
+		}
 		void ModChest(int plr, byte slot, int ID, int stack, byte prefix)
 		{
 			lock (Database)
