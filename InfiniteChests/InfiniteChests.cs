@@ -611,7 +611,7 @@ namespace InfiniteChests
 						Buffer.BlockCopy(BitConverter.GetBytes((short)x), 0, raw2, 5, 2);
 						Buffer.BlockCopy(BitConverter.GetBytes((short)y), 0, raw2, 7, 2);
 						player.SendRawData(raw2);
-						player.SendData(PacketTypes.ChestName, "", 0, x, y);
+						//player.SendData(PacketTypes.ChestName, "", 0, x, y);
 
 						Infos[plr].X = x;
 						Infos[plr].Y = y;
