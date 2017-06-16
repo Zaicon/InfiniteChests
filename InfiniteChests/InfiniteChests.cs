@@ -196,11 +196,7 @@ namespace InfiniteChests
 								{
 									if (TShock.Regions.CanBuild(x, y, TShock.Players[plr]))
 									{
-										if (action == 2)
-											x--;
-										Task.Factory.StartNew(() => PlaceChest(x, y, plr)).LogExceptions();
-										if (action == 2)
-											x++;
+										Task.Factory.StartNew(() => { if (action == 2) x--; PlaceChest(x, y, plr); if (action == 2) x++; }).LogExceptions();
 										if (action == 0)
 										{
 											WorldGen.PlaceChest(x, y, 21, false, style);
